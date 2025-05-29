@@ -1,0 +1,41 @@
+import uvicorn
+import logging
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from app.core.config import get_settings
+from app.core.logging_conf import LOGGING_CONFIG   # noqa: F401  (side-effect)
+from app.api.v1.routes_contact import router as contact_router
+
+settings = get_settings()
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    version="1.0.0",
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    docs_url=f"{settings.API_V1_STR}/docs",
+)
+
+# Routers
+app.include_router(contact_router, prefix=settings.API_V1_STR)
+
+# Global error handler for 422 validation errors
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    # Let FastAPI handle its own; we just standardise the payload structure
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+    )
+
+# Custom handler for generic exceptions
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    logging.getLogger("uvicorn.error").exception("Unhandled exception")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error – our team has been notified."},
+    )
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False, workers=1)
+
