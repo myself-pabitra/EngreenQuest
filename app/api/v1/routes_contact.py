@@ -5,7 +5,7 @@ from app.schemas import contact as contact_schema
 from app.crud import contact as crud_contact
 import logging
 
-from app.utility.email import send_admin_notification
+from app.utility.email import send_inquiry_emails
 
 router = APIRouter(prefix="/contact", tags=["Contact"])
 
@@ -31,7 +31,7 @@ def submit_inquiry(
         inquiry = crud_contact.create_contact(db, payload)
         db.flush()  # forces PK so we can return it
         # 👇 Send admin email in background
-        background_tasks.add_task(send_admin_notification, payload.model_dump(mode="json"))
+        background_tasks.add_task(send_inquiry_emails, payload.model_dump(mode="json"))
 
         log.info("New inquiry %s from %s", inquiry.id, inquiry.email)
         return {
