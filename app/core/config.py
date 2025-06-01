@@ -22,6 +22,15 @@ class Settings(BaseSettings):
     MYSQL_DB: str
     SQLALCHEMY_DATABASE_URI: Optional[str] = None
 
+    # other settings...
+    ADMIN_EMAIL: str
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SMTP_USERNAME: str
+    SMTP_PASSWORD: str
+    SMTP_SENDER_EMAIL: str
+    SMTP_USE_TLS: bool = True
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     @validator("SQLALCHEMY_DATABASE_URI", pre=True, always=True)
