@@ -13,6 +13,7 @@ app = FastAPI(
     version="1.0.0",
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     docs_url=f"{settings.API_V1_STR}/docs",
+    root_path="/api/engreenquest"
 )
 
 # Routers
@@ -37,5 +38,5 @@ async def generic_exception_handler(request: Request, exc: Exception):
     )
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True, workers=1)
+    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True, workers=1)
 
