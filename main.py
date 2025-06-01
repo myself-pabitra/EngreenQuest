@@ -11,8 +11,8 @@ settings = get_settings()
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version="1.0.0",
-    openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    docs_url=f"{settings.API_V1_STR}/docs",
+    openapi_url="/v1/openapi.json",
+    docs_url="/v1/docs",
     root_path="/api/engreenquest"
 )
 
