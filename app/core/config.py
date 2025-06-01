@@ -12,7 +12,7 @@ load_dotenv(".env")
 class Settings(BaseSettings):
     # -- Application --
     PROJECT_NAME: str = "Engreen Quest Contact API"
-    API_V1_STR: str = "/api/engreenquest/v1"
+    API_V1_STR: str = "/v1"
 
     # -- Database --
     MYSQL_USER: str
