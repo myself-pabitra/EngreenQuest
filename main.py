@@ -6,14 +6,27 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.core.config import get_settings
 from app.core.logging_conf import LOGGING_CONFIG   # noqa: F401  (side-effect)
 from app.api.v1.routes_contact import router as contact_router
+from fastapi.middleware.cors import CORSMiddleware
+
 
 settings = get_settings()
+
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version="1.0.0",
     openapi_url="/v1/openapi.json",
     docs_url="/v1/docs",
     root_path="/api/engreenquest"
+)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],              # or use ["*"] to allow all (not recommended for production)
+    allow_credentials=True,
+    allow_methods=["*"],                # allow all HTTP methods
+    allow_headers=["*"],                # allow all headers
 )
 
 # Routers
